@@ -118,12 +118,12 @@ stdenv.mkDerivation {
 
     for i in $out/bin/*; do
       substituteInPlace $i \
-        --replace-fail /opt/kingsoft/wps-office $out/opt/kingsoft/wps-office
+        --replace /opt/kingsoft/wps-office $out/opt/kingsoft/wps-office
     done
 
     for i in $out/share/applications/*; do
       substituteInPlace $i \
-        --replace-fail /usr/bin $out/bin
+        --replace /usr/bin $out/bin
     done
 
     runHook postInstall
@@ -138,7 +138,7 @@ stdenv.mkDerivation {
     # fix et/wpp/wpspdf failure to launch with no mode configured
     for i in $out/bin/*; do
       substituteInPlace $i \
-        --replace-fail '[ $haveConf -eq 1 ] &&' '[ ! $currentMode ] ||'
+        --replace '[ $haveConf -eq 1 ] &&' '[ ! $currentMode ] ||'
     done
   '';
 }
