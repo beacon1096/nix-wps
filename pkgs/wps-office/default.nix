@@ -26,6 +26,10 @@
   cups,
   dbus,
   pango,
+  pulseaudio,
+  libbsd,
+  libXScrnSaver,
+  libXxf86vm,
 }:
 
 let
@@ -84,6 +88,10 @@ stdenv.mkDerivation {
     libxdamage
     libxtst
     libxv
+    pulseaudio
+    libbsd
+    libXScrnSaver
+    libXxf86vm
   ];
 
   dontWrapQtApps = true;
@@ -94,6 +102,10 @@ stdenv.mkDerivation {
     cups
     dbus
     pango
+    pulseaudio
+    libbsd
+    libXScrnSaver
+    libXxf86vm
   ];
 
   unpackPhase = ''
@@ -106,6 +118,8 @@ stdenv.mkDerivation {
     rm -f usr/bin/misc
     rm -rf opt/kingsoft/wps-office/{desktops,INSTALL}
     rm -f opt/kingsoft/wps-office/office6/lib{peony-wpsprint-menu-plugin,bz2,jpeg,stdc++,gcc_s,odbc*,dbus-1}.so*
+    # Remove bundled libraries that conflict with nix libs
+    rm -f opt/kingsoft/wps-office/office6/nplibs/*.so*
   '';
 
   installPhase = ''
