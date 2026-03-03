@@ -34,7 +34,7 @@
 }:
 
 let
-  pname = "wps-office";
+  pname = "wps365-cn";
   sources = import ./sources.nix;
   version = sources.linux-version;
 
@@ -48,7 +48,7 @@ let
   };
 
   meta = {
-    description = "Office suite, formerly Kingsoft Office";
+    description = "WPS365 Office Suite";
     homepage = "https://www.wps.cn";
     platforms = [ "x86_64-linux" ];
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];

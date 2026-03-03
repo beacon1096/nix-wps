@@ -15,7 +15,7 @@ nix run github:your-username/nix-wps
 ```nix
 {
   environment.systemPackages = [
-    (inputs.nix-wps.packages.x86_64-linux.wps-office)
+    (inputs.nix-wps.packages.x86_64-linux.wps365-cn)
   ];
 }
 ```
@@ -29,14 +29,14 @@ nix develop
 ## 更新 WPS Office
 
 ```bash
-./pkgs/wps-office/update.sh
+./pkgs/wps365-cn/update.sh
 ```
 
 **注意**: 更新后需要手动验证新版本是否正常，并提交 `sources.nix` 的变更。
 
 ## 包含的软件
 
-- **WPS Office**: 12.1.2.24722 (Writer, Presentation, Spreadsheets, PDF)
+- **WPS365 Office Suite**: 12.1.2.24722 (Writer, Presentation, Spreadsheets, PDF)
 - WPS 协作 (内置于主包)
 
 ## 支持的平台
