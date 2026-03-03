@@ -1,4 +1,4 @@
-name: Build & Test
+name: Build WPS365 CN
 
 on:
   push:
@@ -28,13 +28,13 @@ jobs:
       - name: Check flake
         run: nix flake check --impure
 
-      - name: Build WPS Office
-        run: nix build .#wps-office --print-out-paths --impure
+      - name: Build WPS365 CN
+        run: nix build .#wps365-cn --print-out-paths --impure
 
       - name: Upload build result
         uses: actions/upload-artifact@v4
         with:
-          name: wps-office
+          name: wps365-cn
           path: result
           retention-days: 7
           include-hidden-files: true
