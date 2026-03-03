@@ -133,15 +133,15 @@ stdenv.mkDerivation {
     cp -r opt $out
     cp -r usr/{bin,share} $out
 
-    # Replace chrome_crashpad_handler with a no-op script.
-    # The original handler crashes on NixOS because it cannot parse
-    # the patched ELF headers, which then kills the main process.
+    # Replace chrome_crashpad_handler with a minimal C stub.
+    # The original handler crashes on NixOS because it cannot parse ELF
+    # headers modified by autoPatchelfHook.  A simple "sleep infinity"
+    # replacement causes the main process to hang because Chromium blocks
+    # waiting for a crashpad IPC handshake that never comes.
+    # This stub performs the handshake (recv 40 bytes, send 8 zero bytes
+    # on --initial-client-fd) so the main process can proceed normally.
     rm -f $out/opt/xiezuo/chrome_crashpad_handler
-    cat > $out/opt/xiezuo/chrome_crashpad_handler <<'CRASHPAD_EOF'
-    #!/bin/sh
-    exec sleep infinity
-    CRASHPAD_EOF
-    chmod +x $out/opt/xiezuo/chrome_crashpad_handler
+    $CC -O2 -o $out/opt/xiezuo/chrome_crashpad_handler ${./crashpad-handler-stub.c}
 
     for i in $out/bin/*; do
       substituteInPlace $i \
