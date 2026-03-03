@@ -1,6 +1,6 @@
 # WPS 协作 (xiezuo) NixOS 启动修复报告
 
-> 调试过程由 Claude Opus 4.6 协助完成。
+> 调试过程全部由 Claude Opus 4.6 完成。
 
 ## 概述
 
