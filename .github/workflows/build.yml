@@ -1,0 +1,40 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v12
+        with:
+          extra-conf: |
+            accept-flake-config = true
+            allow-import-from-derivation = true
+
+      - name: Configure Nix for unfree packages
+        run: |
+          mkdir -p ~/.config/nixpkgs
+          echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
+
+      - name: Check flake
+        run: nix flake check --impure
+
+      - name: Build WPS Office
+        run: nix build .#wps-office --print-out-paths
+
+      - name: Upload build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: wps-office
+          path: result
+          retention-days: 7
+          include-hidden-files: true
