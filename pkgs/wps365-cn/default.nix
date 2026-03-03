@@ -169,6 +169,27 @@ stdenv.mkDerivation {
     substituteInPlace $out/bin/xiezuo --replace "@out@" "$out"
     chmod +x $out/bin/xiezuo
 
+    # --- Fix 4: Replace libmini_ipc.so with a SIGSEGV-safe shim ---
+    # The xiezuo Electron app uses ffi-napi to call init_helper() in
+    # libmini_ipc.so, passing a JS callback wrapped as a C function pointer
+    # via ffi.Callback().  The libffi closure's writable data page gets
+    # freed/zeroed by the GC while the C++ recv-loop thread still holds the
+    # raw pointer → the trampoline jumps to 0x0 → SIGSEGV.
+    #
+    # Fix: interpose a shim .so that:
+    #   1. Renames the original to libmini_ipc_real.so
+    #   2. Provides init_helper/uninit_helper/send_msg that delegate to the
+    #      real lib but pass a stable C function pointer (not an ffi closure)
+    #   3. The shim calls the ffi closure inside a SIGSEGV-recovery region
+    #      (sigsetjmp/siglongjmp) so that if the closure IS freed, the crash
+    #      is caught and the callback is silently disabled
+    local qt_tools="$out/opt/xiezuo/resources/qt-tools"
+    mv "$qt_tools/libmini_ipc.so" "$qt_tools/libmini_ipc_real.so"
+    $CC -shared -fPIC -O2 \
+      -o "$qt_tools/libmini_ipc.so" \
+      ${./libmini_ipc_stub.c} \
+      -ldl -lpthread
+
     runHook postInstall
   '';
 
