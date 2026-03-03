@@ -30,6 +30,7 @@
   libbsd,
   libXScrnSaver,
   libXxf86vm,
+  libva,
 }:
 
 let
@@ -96,7 +97,7 @@ stdenv.mkDerivation {
 
   dontWrapQtApps = true;
 
-  stripAllList = [ "opt" ];
+  dontStrip = true;
 
   runtimeDependencies = map lib.getLib [
     cups
@@ -106,6 +107,8 @@ stdenv.mkDerivation {
     libbsd
     libXScrnSaver
     libXxf86vm
+    udev
+    libva
   ];
 
   unpackPhase = ''
@@ -130,6 +133,16 @@ stdenv.mkDerivation {
     cp -r opt $out
     cp -r usr/{bin,share} $out
 
+    # Replace chrome_crashpad_handler with a no-op script.
+    # The original handler crashes on NixOS because it cannot parse
+    # the patched ELF headers, which then kills the main process.
+    rm -f $out/opt/xiezuo/chrome_crashpad_handler
+    cat > $out/opt/xiezuo/chrome_crashpad_handler <<'CRASHPAD_EOF'
+    #!/bin/sh
+    exec sleep infinity
+    CRASHPAD_EOF
+    chmod +x $out/opt/xiezuo/chrome_crashpad_handler
+
     for i in $out/bin/*; do
       substituteInPlace $i \
         --replace /opt/kingsoft/wps-office $out/opt/kingsoft/wps-office
@@ -139,6 +152,22 @@ stdenv.mkDerivation {
       substituteInPlace $i \
         --replace /usr/bin $out/bin
     done
+
+    mkdir -p $out/bin
+    cat > $out/bin/xiezuo <<'EOF'
+    #!${stdenv.shell}
+    set -euo pipefail
+    config_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/xiezuo"
+    config_file="$config_dir/config.json"
+    mkdir -p "$config_dir"
+    if [ ! -f "$config_file" ]; then
+      echo '{}' > "$config_file"
+    fi
+    cd "@out@/opt/xiezuo"
+    exec "@out@/opt/xiezuo/xiezuo" --no-sandbox "$@"
+    EOF
+    substituteInPlace $out/bin/xiezuo --replace "@out@" "$out"
+    chmod +x $out/bin/xiezuo
 
     runHook postInstall
   '';
