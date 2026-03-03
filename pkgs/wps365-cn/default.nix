@@ -153,6 +153,11 @@ stdenv.mkDerivation {
         --replace /usr/bin $out/bin
     done
 
+    # Fix xiezuo desktop file: point Exec to our wrapper script
+    substituteInPlace $out/share/applications/xiezuo.desktop \
+      --replace 'Exec=/opt/xiezuo/xiezuo --no-sandbox --disable-gpu-sandbox --disable-setuid-sandbox --package-format=deb %U' \
+                'Exec='"$out"'/bin/xiezuo %U'
+
     mkdir -p $out/bin
     cat > $out/bin/xiezuo <<'EOF'
     #!${stdenv.shell}
