@@ -36,12 +36,15 @@ nix develop
 
 ## 包含的软件
 
-- **WPS365 Office Suite**: 12.1.2.24722 (Writer, Presentation, Spreadsheets, PDF)
-- WPS 协作 (内置于主包)
+- **WPS365 + WPS协作** (`wps365-cn`): 12.1.2.24730
+- **WPS Office 个人版** (`wpsoffice-cn`): 12.1.2.25838
+- **WPS Office 海外版** (`wpsoffice-xa`): 11.1.0.11723
 
 ## 支持的平台
 
-- x86_64-linux
+- `x86_64-linux` (所有版本)
+- `aarch64-linux` (仅 `wps365-cn`)
+- `loongarch64-linux` (仅 `wps365-cn`)
 
 ## License
 
