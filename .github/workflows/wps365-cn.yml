@@ -74,9 +74,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v12
         with:
@@ -92,8 +89,8 @@ jobs:
           mkdir -p ~/.config/nixpkgs
           echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
 
-      - name: Build wps365-cn (loongarch64-linux, cache-only)
+      - name: Build wps365-cn (loongarch64-linux cross)
         run: |
-          # Use nix4loong binary cache and avoid local source builds in QEMU.
-          # If cache is missing artifacts, fail fast instead of timing out building glibc.
-          nix build .#packages.loongarch64-linux.wps365-cn --max-jobs 0 --print-out-paths --impure
+          # Keep the native loongarch64 package path unchanged. On GitHub's
+          # x86_64 runner, use a dedicated cross package entry instead.
+          nix build .#packages.x86_64-linux.wps365-cn-loongarch64 --print-out-paths --impure
