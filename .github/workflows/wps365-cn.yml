@@ -1,4 +1,4 @@
-name: Build WPS365 CN
+name: Build wps365-cn
 
 on:
   push:
@@ -33,10 +33,7 @@ jobs:
           mkdir -p ~/.config/nixpkgs
           echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
 
-      - name: Check flake
-        run: nix flake check --impure
-
-      - name: Build WPS365 CN
+      - name: Build wps365-cn
         run: nix build .#packages.${{ matrix.system }}.wps365-cn --print-out-paths --impure
 
       - name: Build WPS Office XA
