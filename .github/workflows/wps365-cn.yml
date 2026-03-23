@@ -8,15 +8,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  check:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - system: x86_64-linux
-            os: ubuntu-22.04
-          - system: aarch64-linux
-            os: ubuntu-24.04-arm
+  flake-check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v12
+        with:
+          extra-conf: |
+            accept-flake-config = true
+            allow-import-from-derivation = true
+
+      - name: Configure Nix for unfree packages
+        run: |
+          mkdir -p ~/.config/nixpkgs
+          echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
+
+      - name: Check flake
+        run: nix flake check --impure
+
+  build-x86_64:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v12
+        with:
+          extra-conf: |
+            accept-flake-config = true
+            allow-import-from-derivation = true
+
+      - name: Configure Nix for unfree packages
+        run: |
+          mkdir -p ~/.config/nixpkgs
+          echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
+
+      - name: Build wps365-cn (x86_64-linux)
+        run: nix build .#packages.x86_64-linux.wps365-cn --print-out-paths --impure
+
+  build-aarch64:
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v4
 
@@ -33,5 +66,35 @@ jobs:
           mkdir -p ~/.config/nixpkgs
           echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
 
-      - name: Build wps365-cn
-        run: nix build .#packages.${{ matrix.system }}.wps365-cn --print-out-paths --impure
+      - name: Build wps365-cn (aarch64-linux)
+        run: nix build .#packages.aarch64-linux.wps365-cn --print-out-paths --impure
+
+  build-loongarch64:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup QEMU for loongarch64
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/loong64
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v12
+        with:
+          extra-conf: |
+            accept-flake-config = true
+            allow-import-from-derivation = true
+            extra-platforms = loongarch64-linux
+            system-features = gccarch-la64v1.0
+            extra-substituters = https://cache.nix4loong.cn
+            extra-trusted-public-keys = cache.nix4loong.cn-1:zmkwLihdSUyy6OFSVgvK3br0EaUEczLiJgDfvOmm3pA=
+
+      - name: Configure Nix for unfree packages
+        run: |
+          mkdir -p ~/.config/nixpkgs
+          echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
+
+      - name: Build wps365-cn (loongarch64-linux)
+        run: |
+          nix build .#packages.loongarch64-linux.wps365-cn --print-out-paths -L

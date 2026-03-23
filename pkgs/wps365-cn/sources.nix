@@ -10,4 +10,8 @@
     url = "https://pubwps-wps365-obs.wpscdn.cn/download/Linux/24730/wps-office_12.1.2.24730.AK.preread.sw_644358_arm64.deb";
     hash = "sha256-oj28gypiX9FcZqCR1Czdmg+Orv5r3eDEprSLuy4lu0A=";
   };
+  loongarch64-linux = {
+    url = "https://pubwps-wps365-obs.wpscdn.cn/download/Linux/24730/wps-office_12.1.2.24730.AK.preread.sw_625684_loongarch64.deb";
+    hash = "sha256-0rH7dF4iXcNORxKzspkW3JnXbV1a/RujpVknmyoLgAM=";
+  };
 }

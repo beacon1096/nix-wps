@@ -50,7 +50,7 @@ let
   meta = {
     description = "WPS365 Office Suite";
     homepage = "https://www.wps.cn";
-    platforms = [ "x86_64-linux" "aarch64-linux" ];
+    platforms = [ "x86_64-linux" "aarch64-linux" "loongarch64-linux" ];
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     hydraPlatforms = [ ];
     license = lib.licenses.unfree;
@@ -72,6 +72,11 @@ stdenv.mkDerivation {
     autoPatchelfHook
     binutils
     gnutar
+  ];
+
+  autoPatchelfIgnoreMissingDeps = lib.optionals (stdenv.hostPlatform.system == "loongarch64-linux") [
+    "ld.so.1"
+    "libde265.so.0"
   ];
 
   buildInputs = [
