@@ -19,7 +19,7 @@
   gtk3,
   libgbm,
   libusb1,
-  unixodbc,
+  unixODBC,
   libmysqlclient,
   libsForQt5,
   libxv,
@@ -145,7 +145,7 @@ else
       gtk3
       libgbm
       libusb1
-      unixodbc
+      unixODBC
       libsForQt5.qtbase
       libxdamage
       libxtst

@@ -16,8 +16,8 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       wps365-cn = pkgs.callPackage ./pkgs/wps365-cn {};
-      wpsoffice-cn = pkgs.callPackage ./pkgs/wpsoffice-cn {};
       wpsoffice-xa = pkgs.callPackage ./pkgs/wpsoffice-xa {};
+      wpsoffice-cn = pkgs.callPackage ./pkgs/wpsoffice-cn {};
       default = self.packages.${system}.wps365-cn;
     });
   };

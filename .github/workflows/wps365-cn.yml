@@ -35,7 +35,3 @@ jobs:
 
       - name: Build wps365-cn
         run: nix build .#packages.${{ matrix.system }}.wps365-cn --print-out-paths --impure
-
-      - name: Build WPS Office XA
-        if: matrix.system == 'x86_64-linux'
-        run: nix build .#packages.${{ matrix.system }}.wpsoffice-xa --print-out-paths --impure

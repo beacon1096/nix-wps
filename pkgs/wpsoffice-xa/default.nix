@@ -37,7 +37,6 @@ stdenv.mkDerivation rec {
   src =
     runCommandLocal "wps-office_${version}.XA_amd64.deb"
       {
-        outputHashMode = "recursive";
         outputHashAlgo = "sha256";
         outputHash = hash;
 
