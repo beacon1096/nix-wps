@@ -9,7 +9,13 @@
     self,
     nixpkgs,
   }: let
-    supportedSystems = [ "x86_64-linux" "aarch64-linux" "loongarch64-linux" ];
+    supportedSystems = [
+      "x86_64-linux"
+      "aarch64-linux"
+      "loongarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
     forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
   in {
     packages = forAllSystems (system: let
@@ -17,15 +23,26 @@
         inherit system;
         config = { allowUnfree = true; };
       };
-    in {
-      wps365-cn = pkgs.callPackage ./pkgs/wps365-cn {};
-    }
-    // pkgs.lib.optionalAttrs (system == "x86_64-linux") {
-      wpsoffice-xa = pkgs.callPackage ./pkgs/wpsoffice-xa {};
-      wpsoffice-cn = pkgs.callPackage ./pkgs/wpsoffice-cn {};
-    }
-    // {
-      default = self.packages.${system}.wps365-cn;
-    });
+      
+      linuxSystems = [ "x86_64-linux" "aarch64-linux" "loongarch64-linux" ];
+    in
+      (pkgs.lib.optionalAttrs (pkgs.lib.elem system linuxSystems) {
+        wps365-cn = pkgs.callPackage ./pkgs/wps365-cn {};
+      })
+      // pkgs.lib.optionalAttrs (system == "x86_64-linux") {
+        wpsoffice-xa = pkgs.callPackage ./pkgs/wpsoffice-xa {};
+      }
+      // pkgs.lib.optionalAttrs (pkgs.lib.elem system [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ]) {
+        wpsoffice-cn = pkgs.callPackage ./pkgs/wpsoffice-cn {};
+      }
+      // {
+        default = if (pkgs.lib.elem system linuxSystems) then
+          pkgs.callPackage ./pkgs/wps365-cn {}
+        else if (pkgs.lib.elem system [ "x86_64-darwin" "aarch64-darwin" ]) then
+          pkgs.callPackage ./pkgs/wpsoffice-cn {}
+        else
+          null;
+      }
+    );
   };
 }

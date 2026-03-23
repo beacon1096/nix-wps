@@ -2,9 +2,9 @@ name: Build wpsoffice-cn
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "**" ]
   workflow_dispatch:
 
 jobs:
@@ -15,6 +15,10 @@ jobs:
         include:
           - system: x86_64-linux
             os: ubuntu-22.04
+          - system: x86_64-darwin
+            os: macos-13
+          - system: aarch64-darwin
+            os: macos-14
     steps:
       - uses: actions/checkout@v4
 

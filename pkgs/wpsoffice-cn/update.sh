@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash -p nix curl cacert
+#!nix-shell -i bash -p nix curl cacert gnugrep coreutils
 
 set -euo pipefail
 
