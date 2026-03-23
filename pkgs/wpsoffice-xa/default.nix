@@ -28,7 +28,7 @@
 let
   pkgVersion = "11.1.0.11723";
   url = "https://wdl1.pcfg.cache.wpscdn.com/wpsdl/wpsoffice/download/linux/${lib.last (lib.splitVersion pkgVersion)}/wps-office_${pkgVersion}.XA_amd64.deb";
-  hash = "sha256-o8njvwE/UsQpPuLyChxGAZ4euvwfuaHxs5pfUvcM7kI=";
+  hash = "sha256-/mMmIQ9p2U79vycokU0pMDa+ORuTphT1jNDh/x1JI7M=";
 in
 stdenv.mkDerivation rec {
   pname = "wpsoffice-xa";
