@@ -74,8 +74,9 @@ stdenv.mkDerivation {
     gnutar
   ];
 
-  autoPatchelfIgnoreMissingDeps = lib.optionals stdenv.hostPlatform.isLoongArch64 [
+  autoPatchelfIgnoreMissingDeps = lib.optionals (stdenv.hostPlatform.system == "loongarch64-linux") [
     "ld.so.1"
+    "libde265.so.0"
   ];
 
   buildInputs = [

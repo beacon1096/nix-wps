@@ -97,4 +97,4 @@ jobs:
 
       - name: Build wps365-cn (loongarch64-linux)
         run: |
-          nix build .#packages.loongarch64-linux.wps365-cn --print-out-paths
+          nix build .#packages.loongarch64-linux.wps365-cn --print-out-paths -L
