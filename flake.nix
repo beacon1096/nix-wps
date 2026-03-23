@@ -21,7 +21,6 @@
       wps365-cn = pkgs.callPackage ./pkgs/wps365-cn {};
     }
     // pkgs.lib.optionalAttrs (system == "x86_64-linux") {
-      wps365-cn-loongarch64 = pkgs.pkgsCross."loongarch64-linux".callPackage ./pkgs/wps365-cn {};
       wpsoffice-xa = pkgs.callPackage ./pkgs/wpsoffice-xa {};
       wpsoffice-cn = pkgs.callPackage ./pkgs/wpsoffice-cn {};
     }

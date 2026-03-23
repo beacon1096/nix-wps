@@ -74,6 +74,10 @@ stdenv.mkDerivation {
     gnutar
   ];
 
+  autoPatchelfIgnoreMissingDeps = lib.optionals stdenv.hostPlatform.isLoongArch64 [
+    "ld.so.1"
+  ];
+
   buildInputs = [
     alsa-lib
     libjpeg

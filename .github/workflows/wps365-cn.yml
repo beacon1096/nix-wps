@@ -74,6 +74,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup QEMU for loongarch64
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/loong64
+
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v12
         with:
@@ -81,6 +86,7 @@ jobs:
             accept-flake-config = true
             allow-import-from-derivation = true
             extra-platforms = loongarch64-linux
+            system-features = gccarch-la64v1.0
             extra-substituters = https://cache.nix4loong.cn
             extra-trusted-public-keys = cache.nix4loong.cn-1:zmkwLihdSUyy6OFSVgvK3br0EaUEczLiJgDfvOmm3pA=
 
@@ -89,8 +95,6 @@ jobs:
           mkdir -p ~/.config/nixpkgs
           echo '{ allowUnfree = true; }' > ~/.config/nixpkgs/config.nix
 
-      - name: Build wps365-cn (loongarch64-linux cross)
+      - name: Build wps365-cn (loongarch64-linux)
         run: |
-          # Keep the native loongarch64 package path unchanged. On GitHub's
-          # x86_64 runner, use a dedicated cross package entry instead.
-          nix build .#packages.x86_64-linux.wps365-cn-loongarch64 --print-out-paths --impure
+          nix build .#packages.loongarch64-linux.wps365-cn --print-out-paths
