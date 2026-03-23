@@ -10,8 +10,17 @@ on:
 jobs:
   check:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        system: [x86_64-linux, aarch64-linux]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        if: matrix.system == 'aarch64-linux'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v12
@@ -19,6 +28,7 @@ jobs:
           extra-conf: |
             accept-flake-config = true
             allow-import-from-derivation = true
+            extra-platforms = aarch64-linux arm-linux
 
       - name: Configure Nix for unfree packages
         run: |
@@ -29,12 +39,12 @@ jobs:
         run: nix flake check --impure
 
       - name: Build WPS365 CN
-        run: nix build .#wps365-cn --print-out-paths --impure
+        run: nix build .#packages.${{ matrix.system }}.wps365-cn --print-out-paths --impure
 
       - name: Upload build result
         uses: actions/upload-artifact@v4
         with:
-          name: wps365-cn
+          name: wps365-cn-${{ matrix.system }}
           path: result
           retention-days: 7
           include-hidden-files: true
