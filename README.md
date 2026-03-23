@@ -42,9 +42,11 @@ nix develop
 
 ## 支持的平台
 
-- `x86_64-linux` (所有版本)
-- `aarch64-linux` (仅 `wps365-cn`)
-- `loongarch64-linux` (仅 `wps365-cn`)
+- `x86_64-linux`: `wps365-cn`, `wpsoffice-cn`, `wpsoffice-xa`
+- `aarch64-linux`: `wps365-cn`
+- `loongarch64-linux`: `wps365-cn`
+- `x86_64-darwin` (macOS Intel): `wpsoffice-cn`
+- `aarch64-darwin` (macOS Apple Silicon): `wpsoffice-cn`
 
 ## License
 
