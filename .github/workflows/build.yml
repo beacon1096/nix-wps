@@ -9,7 +9,14 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - system: x86_64-linux
+            os: ubuntu-22.04
+          - system: aarch64-linux
+            os: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v4
 
@@ -19,6 +26,7 @@ jobs:
           extra-conf: |
             accept-flake-config = true
             allow-import-from-derivation = true
+            extra-platforms = aarch64-linux arm-linux
 
       - name: Configure Nix for unfree packages
         run: |
@@ -29,12 +37,4 @@ jobs:
         run: nix flake check --impure
 
       - name: Build WPS365 CN
-        run: nix build .#wps365-cn --print-out-paths --impure
-
-      - name: Upload build result
-        uses: actions/upload-artifact@v4
-        with:
-          name: wps365-cn
-          path: result
-          retention-days: 7
-          include-hidden-files: true
+        run: nix build .#packages.${{ matrix.system }}.wps365-cn --print-out-paths --impure

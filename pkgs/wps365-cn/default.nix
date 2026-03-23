@@ -39,8 +39,8 @@ let
   version = sources.linux-version;
 
   src = fetchurl {
-    url = sources.x86_64-linux.url;
-    hash = sources.x86_64-linux.hash;
+    url = sources.${stdenv.hostPlatform.system}.url;
+    hash = sources.${stdenv.hostPlatform.system}.hash;
   };
 
   passthru = {
@@ -50,7 +50,7 @@ let
   meta = {
     description = "WPS365 Office Suite";
     homepage = "https://www.wps.cn";
-    platforms = [ "x86_64-linux" ];
+    platforms = [ "x86_64-linux" "aarch64-linux" ];
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     hydraPlatforms = [ ];
     license = lib.licenses.unfree;
@@ -145,18 +145,18 @@ stdenv.mkDerivation {
 
     for i in $out/bin/*; do
       substituteInPlace $i \
-        --replace /opt/kingsoft/wps-office $out/opt/kingsoft/wps-office
+        --replace-warn /opt/kingsoft/wps-office $out/opt/kingsoft/wps-office
     done
 
     for i in $out/share/applications/*; do
       substituteInPlace $i \
-        --replace /usr/bin $out/bin
+        --replace-warn /usr/bin $out/bin
     done
 
     # Fix xiezuo desktop file: point Exec to our wrapper script
     substituteInPlace $out/share/applications/xiezuo.desktop \
-      --replace 'Exec=/opt/xiezuo/xiezuo --no-sandbox --disable-gpu-sandbox --disable-setuid-sandbox --package-format=deb %U' \
-                'Exec='"$out"'/bin/xiezuo %U'
+      --replace-warn 'Exec=/opt/xiezuo/xiezuo --no-sandbox --disable-gpu-sandbox --disable-setuid-sandbox --package-format=deb %U' \
+                     'Exec='"$out"'/bin/xiezuo %U'
 
     mkdir -p $out/bin
     cat > $out/bin/xiezuo <<'EOF'
@@ -171,7 +171,7 @@ stdenv.mkDerivation {
     cd "@out@/opt/xiezuo"
     exec "@out@/opt/xiezuo/xiezuo" --no-sandbox "$@"
     EOF
-    substituteInPlace $out/bin/xiezuo --replace "@out@" "$out"
+    substituteInPlace $out/bin/xiezuo --replace-warn "@out@" "$out"
     chmod +x $out/bin/xiezuo
 
     # --- Fix 4: Replace libmini_ipc.so with a SIGSEGV-safe shim ---
@@ -201,13 +201,15 @@ stdenv.mkDerivation {
   preFixup = ''
     # dlopen dependency
     patchelf --add-needed libudev.so.1 $out/opt/kingsoft/wps-office/office6/addons/cef/libcef.so
-    # libmysqlclient dependency
-    patchelf --replace-needed libmysqlclient.so.18 libmysqlclient.so $out/opt/kingsoft/wps-office/office6/libFontWatermark.so
-    patchelf --add-rpath ${libmysqlclient}/lib/mariadb $out/opt/kingsoft/wps-office/office6/libFontWatermark.so
+    ${lib.optionalString stdenv.hostPlatform.isx86_64 ''
+      # libmysqlclient dependency
+      patchelf --replace-needed libmysqlclient.so.18 libmysqlclient.so $out/opt/kingsoft/wps-office/office6/libFontWatermark.so
+      patchelf --add-rpath ${libmysqlclient}/lib/mariadb $out/opt/kingsoft/wps-office/office6/libFontWatermark.so
+    ''}
     # fix et/wpp/wpspdf failure to launch with no mode configured
     for i in $out/bin/*; do
       substituteInPlace $i \
-        --replace '[ $haveConf -eq 1 ] &&' '[ ! $currentMode ] ||'
+        --replace-warn '[ $haveConf -eq 1 ] &&' '[ ! $currentMode ] ||'
     done
   '';
 }
