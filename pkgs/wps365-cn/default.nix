@@ -50,7 +50,7 @@ let
   meta = {
     description = "WPS365 Office Suite";
     homepage = "https://www.wps.cn";
-    platforms = [ "x86_64-linux" "aarch64-linux" ];
+    platforms = [ "x86_64-linux" "aarch64-linux" "loongarch64-linux" ];
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     hydraPlatforms = [ ];
     license = lib.licenses.unfree;
