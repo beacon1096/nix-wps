@@ -39,8 +39,8 @@ let
   version = sources.linux-version;
 
   src = fetchurl {
-    url = sources.x86_64-linux.url;
-    hash = sources.x86_64-linux.hash;
+    url = sources.${stdenv.hostPlatform.system}.url;
+    hash = sources.${stdenv.hostPlatform.system}.hash;
   };
 
   passthru = {
@@ -50,7 +50,7 @@ let
   meta = {
     description = "WPS365 Office Suite";
     homepage = "https://www.wps.cn";
-    platforms = [ "x86_64-linux" ];
+    platforms = [ "x86_64-linux" "aarch64-linux" ];
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     hydraPlatforms = [ ];
     license = lib.licenses.unfree;
