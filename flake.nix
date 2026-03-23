@@ -9,15 +9,22 @@
     self,
     nixpkgs,
   }: let
-    supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+    supportedSystems = [ "x86_64-linux" "aarch64-linux" "loongarch64-linux" ];
     forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
   in {
     packages = forAllSystems (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config = { allowUnfree = true; };
+      };
     in {
       wps365-cn = pkgs.callPackage ./pkgs/wps365-cn {};
+    }
+    // pkgs.lib.optionalAttrs (system == "x86_64-linux") {
       wpsoffice-xa = pkgs.callPackage ./pkgs/wpsoffice-xa {};
       wpsoffice-cn = pkgs.callPackage ./pkgs/wpsoffice-cn {};
+    }
+    // {
       default = self.packages.${system}.wps365-cn;
     });
   };
