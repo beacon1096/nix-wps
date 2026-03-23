@@ -16,7 +16,7 @@ jobs:
           - system: x86_64-linux
             os: ubuntu-22.04
           - system: x86_64-darwin
-            os: macos-13
+            os: macos-15-intel
           - system: aarch64-darwin
             os: macos-14
     steps:
