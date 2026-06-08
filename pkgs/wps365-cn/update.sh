@@ -7,12 +7,12 @@ cd "$(dirname "$0")"
 
 SOURCES_FILE="./sources.nix"
 
-VERSION="12.1.2.24730"
-BUILD_NUMBER="24730"
+VERSION="12.1.2.25882"
+BUILD_NUMBER="25882"
 
-URL_AMD64="https://pubwps-wps365-obs.wpscdn.cn/download/Linux/${BUILD_NUMBER}/wps-office_${VERSION}.AK.preread.sw_644359_amd64.deb"
-URL_ARM64="https://pubwps-wps365-obs.wpscdn.cn/download/Linux/${BUILD_NUMBER}/wps-office_${VERSION}.AK.preread.sw_644358_arm64.deb"
-URL_LOONGARCH64="https://pubwps-wps365-obs.wpscdn.cn/download/Linux/${BUILD_NUMBER}/wps-office_${VERSION}.AK.preread.sw_625684_loongarch64.deb"
+URL_AMD64="https://pubwps-wps365-obs.wpscdn.cn/download/Linux/${BUILD_NUMBER}/wps-office_${VERSION}.AK.preread.sw.365_667345_amd64.deb"
+URL_ARM64="https://pubwps-wps365-obs.wpscdn.cn/download/Linux/${BUILD_NUMBER}/wps-office_${VERSION}.AK.preread.sw.365_667348_arm64.deb"
+URL_LOONGARCH64="https://pubwps-wps365-obs.wpscdn.cn/download/Linux/${BUILD_NUMBER}/wps-office_${VERSION}.AK.preread.sw.365_667352_loongarch64.deb"
 
 echo "Fetching new hash for x86_64-linux version ${VERSION}..."
 HASH_AMD64_OUTPUT=$(nix-prefetch-url --name "wps-office_${VERSION}_amd64.deb" "$URL_AMD64" 2>&1)
