@@ -25,10 +25,14 @@
       };
       
       linuxSystems = [ "x86_64-linux" "aarch64-linux" "loongarch64-linux" ];
+      wpsxiezuoSystems = [ "x86_64-linux" "aarch64-linux" ];
     in
       (pkgs.lib.optionalAttrs (pkgs.lib.elem system linuxSystems) {
         wps365-cn = pkgs.callPackage ./pkgs/wps365-cn {};
       })
+      // pkgs.lib.optionalAttrs (pkgs.lib.elem system wpsxiezuoSystems) {
+        wpsxiezuo = pkgs.callPackage ./pkgs/wpsxiezuo {};
+      }
       // pkgs.lib.optionalAttrs (system == "x86_64-linux") {
         wpsoffice-xa = pkgs.callPackage ./pkgs/wpsoffice-xa {};
       }
