@@ -37,7 +37,7 @@ nix develop
 ## 包含的软件
 
 - **WPS365 + WPS协作** (`wps365-cn`): 12.1.2.24730
-- **WPS Office 个人版** (`wpsoffice-cn`): 12.1.2.25838
+- **WPS Office 个人版** (`wpsoffice-cn`): Linux 12.1.2.25882 / macOS 12.1.26016
 - **WPS Office 海外版** (`wpsoffice-xa`): 11.1.0.11723
 
 ## 支持的平台
