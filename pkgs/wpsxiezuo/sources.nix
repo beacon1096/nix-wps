@@ -1,11 +1,11 @@
 {
-  version = "5.47.2";
+  version = "5.52.3";
   x86_64-linux = {
     url = "https://woa.wps.cn/download/deb-X64";
-    hash = "sha256-5oZKMQOmscH7MirlUG2AiyZKbY/qvS9tatXMTdPbalI=";
+    hash = "sha256-LmJGtdFekMnJTMgOfRN9mfRv6lcLaeZrTv6ZxqBAueQ=";
   };
   aarch64-linux = {
     url = "https://woa.wps.cn/download/deb-Arm64";
-    hash = "sha256-nFs4KbAwPLMrYPCVbVotGboGNWX2PsAN3Q2IOmz7G3Y=";
+    hash = "sha256-S9ZyJLFlOlgdvIib+mpWuNsdA+cWqoZ698PngLfjdSM=";
   };
 }

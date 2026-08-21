@@ -5,6 +5,7 @@
   autoPatchelfHook,
   binutils,
   gnutar,
+  zstd,
   alsa-lib,
   at-spi2-core,
   cups,
@@ -14,6 +15,7 @@
   libnotify,
   libsecret,
   libxkbcommon,
+  libva,
   nss,
   pango,
   pulseaudio,
@@ -61,6 +63,7 @@ stdenv.mkDerivation {
     autoPatchelfHook
     binutils
     gnutar
+    zstd
   ];
 
   buildInputs = [
@@ -71,6 +74,7 @@ stdenv.mkDerivation {
     libnotify
     libsecret
     libxkbcommon
+    libva
     nss
     pulseaudio
     libbsd
@@ -104,8 +108,14 @@ stdenv.mkDerivation {
   unpackPhase = ''
     runHook preUnpack
 
-    ar x $src
-    tar -xf data.tar.xz
+    data_archive=$(ar t "$src" | sed -n '/^data\.tar\./{p;q;}')
+    if [ -z "$data_archive" ]; then
+      echo "No Debian data archive found" >&2
+      exit 1
+    fi
+
+    ar x "$src" "$data_archive"
+    tar -xf "$data_archive"
 
     runHook postUnpack
   '';
